@@ -1,0 +1,41 @@
+.container {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .groupList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .groupItem {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form label {
+    margin-bottom: 10px;
+  }
+  
+  .form input, .form textarea {
+    margin-top: 5px;
+  }
+  
+  .button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  

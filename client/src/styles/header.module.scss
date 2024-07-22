@@ -1,0 +1,32 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 25rem;  ;
+  background-image: url(https://assets.splitwise.com/assets/core/facets.png);
+  background-color: rgb(255, 253, 244);}
+
+.logo {
+  img {
+    width: 150px;
+    height: 50px
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+
+  .button {
+    padding: 0.5rem 1rem;
+    background-color: #030303;;
+    color: #ffffff;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+
+    // &:hover {
+    //   background-color: #030303;
+    // }
+  }
+}

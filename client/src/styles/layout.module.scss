@@ -1,0 +1,18 @@
+// .main{
+//     background-image: url(https://assets.splitwise.com/assets/core/facets.png);
+//     height: 60vh;
+// }
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-image: url(https://assets.splitwise.com/assets/core/facets.png);
+    background-color: rgb(255, 253, 244);
+    .main {
+      flex: 1;
+    }
+    font-family: lato;
+  }
+  
