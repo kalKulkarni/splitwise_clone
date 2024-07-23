@@ -77,6 +77,7 @@ import Layout from '../../components/layout';
 import styles from '../../styles/expense.module.scss';
 import axios from 'axios';
 import Link from 'next/link';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 interface Expense {
   notes: ReactNode;
@@ -109,6 +110,35 @@ const GetExpenses = () => {
   useEffect(() => {
     fetchExpenses();
   }, []);
+  const handleEdit = async (id: number) => {
+    try {
+      const response = await axios.post('http://localhost:3000/expenses/:id', {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTc0MTMxOCwiZXhwIjoxNzIxODI3NzE4fQ.2JpE1_3xARCU1dQIQOoSvnvpKHQRz6ljZX4d9xlPTBc"
+        }
+      });
+      setExpenses(response.data);
+      console.log(response.data, 'data data ::::::');
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await axios.post('http://localhost:3000/expenses/get-expenses/:id', {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTc0MTMxOCwiZXhwIjoxNzIxODI3NzE4fQ.2JpE1_3xARCU1dQIQOoSvnvpKHQRz6ljZX4d9xlPTBc"
+        }
+      });
+      setExpenses(response.data);
+      console.log(response.data, 'data data ::::::');
+    } catch (error) {
+      console.error('Error fetching expenses:', error);
+    }
+  };
 
   return (
     <Layout>
@@ -117,21 +147,23 @@ const GetExpenses = () => {
           <span className={styles.addButton}>Add Expense</span>
         </Link>
         <h1 className={styles.title}>Expense List</h1>
-        <ul className={styles.expenseList}>
-          <div>
-            {expenses.map((expense) => (
-              <div key={expense.id}>
-                <h3>{expense.amount}</h3>
+        <div className={styles.expenseList}>
+          {expenses.map((expense) => (
+            <div key={expense.id} className={styles.card}>
+              <div className={styles.cardContent}>
+                <h3>{expense.notes}</h3>
                 <p>{expense.payer}</p>
                 <p>Participants: {Array.isArray(expense.participants) ? expense.participants.join(', ') : 'No Participants'}</p>
                 <p>{expense.date}</p>
-                <p>{expense.notes}</p>
-                <Link href={'/expenses/edit-expenses'}>
-                <span>Edit Expenses</span></Link>
+                <p>{expense.amount}</p>
               </div>
-            ))}
-          </div>
-        </ul>
+              <div className={styles.cardActions}>
+                <FaEdit onClick={() => handleEdit(expense.id)} className={styles.icon} />
+                <FaTrash onClick={() => handleDelete(expense.id)} className={styles.icon} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </Layout>
   );
