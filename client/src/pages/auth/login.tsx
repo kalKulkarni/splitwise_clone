@@ -1,34 +1,31 @@
-// pages/auth/signup.tsx
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import styles from '../../styles/signup.module.scss';
-import { api } from '../../utils/api';
-import Layout from '@/components/layout';
 import axios from 'axios';
-
-const Signup = () => {
+import { useRouter } from 'next/router';
+import styles from '../../styles/login.module.scss'
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await api.post('/auth/login', { email, password });
-      router.push('/dashboard');
+      const response = await axios.post('/auth/login', { email, password });
+      const { token } = response.data;
+      if (token) {
+        localStorage.setItem('token', token);
+        router.push('/dashboard');
+      } else {
+        setError('Token is undefined');
+      }
     } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-            if (err.response.status === 401) {
-              setError('Invalid email or password');
-            } else {
-              setError('Login error');
-            }
-          } else {
-            setError('An unexpected error occurred');
-          }
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data.message || 'An error occurred');
+      } else {
+        setError('An unexpected error occurred');
+      }
+      console.error('Failed to login', err);
     }
   };
 
@@ -36,7 +33,8 @@ const Signup = () => {
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Welcome Back</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.formControl}>
             <label className={styles.label}>Email:</label>
             <input 
@@ -69,6 +67,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
-
-
+export default Login;

@@ -1,26 +1,26 @@
-// pages/auth/signup.tsx
 import { useState } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-import styles from '../../styles/signup.module.scss';
-import { api } from '../../utils/api';
-import Layout from '@/components/layout';
-
+import styles from '../../styles/signup.module.scss'
 const Signup = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
-
-
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await api.post('/auth/signup', { email, password });
+      await axios.post('/auth/signup', { name, email, password });
       router.push('/auth/login');
-    } catch (error) {
-      console.error('Signup error', error);
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data.message || 'An error occurred');
+      } else {
+        setError('An unexpected error occurred');
+      }
+      console.error('Failed to signup', err);
     }
   };
 
@@ -28,7 +28,8 @@ const Signup = () => {
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Create an Account</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleSignup} className={styles.form}>
           <div className={styles.formControl}>
             <label className={styles.label}>Name:</label>
             <input 
@@ -70,5 +71,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
-

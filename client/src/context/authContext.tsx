@@ -1,10 +1,8 @@
-// context/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { api } from '../utils/api';
 
 interface AuthContextProps {
-  isAuthenticated: boolean;
+  token: string | null;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -12,42 +10,62 @@ interface AuthContextProps {
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setIsAuthenticated(true);
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      const expirationTime = getTokenExpirationTime(savedToken);
+      if (Date.now() >= expirationTime) {
+        logout();
+      } else {
+        setToken(savedToken);
+        const timeout = expirationTime - Date.now();
+        setTimeout(() => {
+          logout();
+        }, timeout);
+      }
+    } else {
+      router.push('/login');
     }
-  }, []);
+  }, [router]);
 
   const login = (token: string) => {
     localStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setIsAuthenticated(true);
+    setToken(token);
     router.push('/dashboard');
+    const expirationTime = getTokenExpirationTime(token);
+    const timeout = expirationTime - Date.now();
+    setTimeout(() => {
+      logout();
+    }, timeout);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete api.defaults.headers.common['Authorization'];
-    setIsAuthenticated(false);
-    router.push('/auth/login');
+    setToken(null);
+    router.push('/login');
   };
 
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+const getTokenExpirationTime = (token: string): number => {
+  const payloadBase64 = token.split('.')[1];
+  const decodedPayload = JSON.parse(atob(payloadBase64));
+  return decodedPayload.exp * 1000;
 };
+
+// export const useAuth = () => {
+//   const context = useContext(AuthContext);
+//   if (!context) {
+//     throw new Error('useAuth must be used within an AuthProvider');
+//   }
+//   return context;
+// };

@@ -15,10 +15,8 @@
 
 
 
-// pages/_app.tsx
 import { AppProps } from 'next/app';
 import { AuthProvider } from '../context/authContext';
-import '../styles/globals.scss'; 
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -29,3 +27,4 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+
