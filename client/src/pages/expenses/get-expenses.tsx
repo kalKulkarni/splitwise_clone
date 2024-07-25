@@ -63,7 +63,7 @@
 //             ))}
 //           </div>
 //         </ul>
-        
+
 //       </div>
 //     </Layout>
 //   );
@@ -77,7 +77,11 @@ import Layout from '../../components/layout';
 import styles from '../../styles/expense.module.scss';
 import axios from 'axios';
 import Link from 'next/link';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaAd, FaEdit, FaPlus, FaPlusCircle, FaTrash } from 'react-icons/fa';
+import { IoAddCircle } from "react-icons/io5";
+import ReactTooltip from 'react-tooltip';
+
+import router from 'next/router';
 
 interface Expense {
   notes: ReactNode;
@@ -97,7 +101,7 @@ const GetExpenses = () => {
       const response = await axios.get('http://localhost:3000/expenses/get-expenses', {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTc0MTMxOCwiZXhwIjoxNzIxODI3NzE4fQ.2JpE1_3xARCU1dQIQOoSvnvpKHQRz6ljZX4d9xlPTBc"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
         }
       });
       setExpenses(response.data);
@@ -110,27 +114,20 @@ const GetExpenses = () => {
   useEffect(() => {
     fetchExpenses();
   }, []);
-  const handleEdit = async (id: number) => {
-    try {
-      const response = await axios.post('http://localhost:3000/expenses/:id', {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTc0MTMxOCwiZXhwIjoxNzIxODI3NzE4fQ.2JpE1_3xARCU1dQIQOoSvnvpKHQRz6ljZX4d9xlPTBc"
-        }
-      });
-      setExpenses(response.data);
-      console.log(response.data, 'data data ::::::');
-    } catch (error) {
-      console.error('Error fetching expenses:', error);
-    }
+  const addExpenseNavigation = () => {
+    router.push('/expenses/add-expenses')
+  }
+  const handleEdit = (id: number) => {
+    router.push(`/expenses/edit-expenses?id=${id}`);
+
   };
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await axios.post('http://localhost:3000/expenses/get-expenses/:id', {
+      // const response = await axios.delete(`http://localhost:3000/expenses/${expenses.id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTc0MTMxOCwiZXhwIjoxNzIxODI3NzE4fQ.2JpE1_3xARCU1dQIQOoSvnvpKHQRz6ljZX4d9xlPTBc"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
         }
       });
       setExpenses(response.data);
@@ -143,10 +140,10 @@ const GetExpenses = () => {
   return (
     <Layout>
       <div className={styles.container}>
-        <Link href="/expenses/add-expenses">
-          <span className={styles.addButton}>Add Expense</span>
-        </Link>
+      <div className={styles.header}>
         <h1 className={styles.title}>Expense List</h1>
+        <IoAddCircle onClick={addExpenseNavigation} className={styles.addIcon} data-tip="Add Expense"/>
+      </div>
         <div className={styles.expenseList}>
           {expenses.map((expense) => (
             <div key={expense.id} className={styles.card}>

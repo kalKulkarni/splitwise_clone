@@ -4,6 +4,7 @@ import Layout from '../components/layout';
 import styles from '../styles/dashboard.module.scss';
 
 const Dashboard = () => {
+  
   return (
     <Layout>
       <div className={styles.hero}>

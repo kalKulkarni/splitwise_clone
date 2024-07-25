@@ -1,34 +1,29 @@
-// pages/auth/signup.tsx
 import { useState } from 'react';
-import { useRouter } from 'next/router';
-import styles from '../../styles/signup.module.scss';
-import { api } from '../../utils/api';
-import Layout from '@/components/layout';
 import axios from 'axios';
-
-const Signup = () => {
+import { useRouter } from 'next/router';
+import styles from '../../styles/login.module.scss'
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
-
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await api.post('/auth/login', { email, password });
-      router.push('/dashboard');
-    } catch (err) {
-        if (axios.isAxiosError(err) && err.response) {
-            if (err.response.status === 401) {
-              setError('Invalid email or password');
-            } else {
-              setError('Login error');
-            }
-          } else {
-            setError('An unexpected error occurred');
-          }
+      const response = await axios.post('http://localhost:3000/auth/login', { email, password }, {
+        
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+        },
+      });
+              router.push('/dashboard')
+
+      console.log(response.data);
+    } catch (error) {
+      setError('Invalid email or password');
+      console.error('Error logging in:', error);
     }
   };
 
@@ -36,7 +31,8 @@ const Signup = () => {
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Welcome Back</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.formControl}>
             <label className={styles.label}>Email:</label>
             <input 
@@ -69,6 +65,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
-
-
+export default Login;

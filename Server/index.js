@@ -11,7 +11,7 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/auth', authRoutes);
+app.use('/auth',authRoutes );
 app.use('/expenses', expenseRoutes);
 app.use('/groups', groupRoutes);
 
