@@ -12,7 +12,7 @@ const Signup = () => {
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post('/auth/signup', { name, email, password });
+      await axios.post('http://localhost:3000/auth/signup', { name, email, password });
       router.push('/auth/login');
     } catch (err) {
       if (axios.isAxiosError(err)) {

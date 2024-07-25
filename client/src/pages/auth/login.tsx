@@ -11,21 +11,19 @@ const Login = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/auth/login', { email, password });
-      const { token } = response.data;
-      if (token) {
-        localStorage.setItem('token', token);
-        router.push('/dashboard');
-      } else {
-        setError('Token is undefined');
-      }
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data.message || 'An error occurred');
-      } else {
-        setError('An unexpected error occurred');
-      }
-      console.error('Failed to login', err);
+      const response = await axios.post('http://localhost:3000/auth/login', { email, password }, {
+        
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+        },
+      });
+              router.push('/dashboard')
+
+      console.log(response.data);
+    } catch (error) {
+      setError('Invalid email or password');
+      console.error('Error logging in:', error);
     }
   };
 

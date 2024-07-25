@@ -4,8 +4,10 @@ import Layout from '@/components/layout';
 import Styles from '../../styles/expense.module.scss';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 
 interface Expense {
+  name: string | number | readonly string[] | undefined;
   id: number;
   amount: number;
   payer: string;
@@ -14,106 +16,145 @@ interface Expense {
   notes: string;
 }
 
-const EditExpense = () => {
-  const [expense, setExpense] = useState<Expense | null>(null);
+
+interface EditExpenseProps {
+  expense: Expense;
+}
+
+const EditExpense = ({ expense }: EditExpenseProps) => {
+  const [formData, setFormData] = useState(expense);
   const router = useRouter();
-  const { id } = router.query;
 
-  useEffect(() => {
-    if (id) {
-      const fetchExpense = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3000/expenses/${id}`);
-          setExpense(response.data);
-        } catch (error) {
-          console.error('Error fetching expense:', error);
-        }
-      };
-      fetchExpense();
-    }
-  }, [id]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setExpense((prevExpense) => prevExpense ? { ...prevExpense, [name]: value } : null);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (expense) {
-      try {
-        await axios.put(`http://localhost:3000/expenses/${expense.id}`, expense, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTgwMzE2OSwiZXhwIjoxNzIxODg5NTY5fQ.ZgDKPahmbUWBxoMv6g5eA4x_zdNEx0x5jF18yqhXjzY" 
-          }
-        });
-        router.push('/expenses/get-expenses');
-      } catch (error) {
-        console.error('Error updating expense:', error);
-      }
+    try {
+      await axios.put(`http://localhost:3000/expenses/${expense.id}`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+        }
+      });
+      router.push('/expenses/get-expenses'); 
+    } catch (error) {
+      console.error('Error updating expense:', error);
     }
   };
-
-  if (!expense) {
-    return <div>Loading...</div>;
-  }
 
   return (
+    // <div className={Styles.container}>
+    //   <h1 className={Styles.title}>Edit Expense</h1>
+    //   <form onSubmit={handleSubmit}>
+    //     <div>
+    //       <label>Name:</label>
+    //       <input
+    //         type="text"
+    //         name="name"
+    //         value={formData.name}
+    //         onChange={handleChange}
+    //       />
+    //     </div>
+    //     <div>
+    //       <label>Amount:</label>
+    //       <input
+    //         type="number"
+    //         name="amount"
+    //         value={formData.amount}
+    //         onChange={handleChange}
+    //       />
+    //     </div>
+    //     {/* Add other fields as necessary */}
+    //     <button type="submit">Edit</button>
+    //   </form>
+    // </div>
     <Layout>
       <div className={Styles.container}>
-        <h1 className={Styles.title}>Edit Expense</h1>
+        <h1>Edit Expense</h1>
         <form onSubmit={handleSubmit} className={Styles.form}>
+          <label>
+            Name:
+            <input
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </label>
           <label>
             Amount:
             <input
               type="number"
-              name="amount"
-              value={expense.amount}
-              onChange={handleInputChange}
+              value={formData.amount}
+              onChange={handleChange}
             />
           </label>
           <label>
-            Payer:
+           Payer:
             <input
               type="text"
-              name="payer"
-              value={expense.payer}
-              onChange={handleInputChange}
+              value={formData.payer}
+              onChange={handleChange}
             />
           </label>
           <label>
             Participants:
             <input
               type="text"
-              name="participants"
-              value={expense.participants.join(',')}
-              onChange={(e) => setExpense((prevExpense) => prevExpense ? { ...prevExpense, participants: e.target.value.split(',') } : null)}
+              value={formData.participants}
+              onChange={handleChange}
             />
           </label>
           <label>
-            Date:
-            <input
-              type="date"
-              name="date"
-              value={expense.date}
-              onChange={handleInputChange}
-            />
-          </label>
-          <label>
-            Notes:
+          notes:
             <input
               type="text"
-              name="notes"
-              value={expense.notes}
-              onChange={handleInputChange}
+              value={formData.notes}
+              onChange={handleChange}
             />
           </label>
-          <button type="submit">Update Expense</button>
+          <label>
+          notes:
+            <input
+              type="date"
+              value={formData.date}
+              onChange={handleChange}
+            />
+          </label>
+          <button type="submit">Edit Expense</button>
         </form>
       </div>
     </Layout>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.query;
+  if (!id) {
+    return {
+      notFound: true,
+    };
+  }
+  try {
+    const response = await axios.get(`http://localhost:3000/expenses/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDExNDQsImV4cCI6MTcyMTkwNDc0NH0.ntuc6z63IYwO6FSJo1LrVrw6HO8P8PVrICINnacOl1w" // Replace with actual token
+      }
+    });
+    return {
+      props: {
+        expense: response.data,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching expense:', error);
+    return {
+      notFound: true,
+    };
+  }
+};
+
 
 export default EditExpense;

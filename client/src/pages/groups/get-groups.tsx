@@ -18,7 +18,7 @@ const GetGroup = () => {
                 const response = await axios.get('http://localhost:3000/groups/get-group', {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcyMTgwMzE2OSwiZXhwIjoxNzIxODg5NTY5fQ.ZgDKPahmbUWBxoMv6g5eA4x_zdNEx0x5jF18yqhXjzY',
+                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY',
                     },
                 });
                 console.log(response.data, 'response data:::::::');
