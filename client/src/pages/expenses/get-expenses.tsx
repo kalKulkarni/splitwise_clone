@@ -74,7 +74,7 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 import Layout from '../../components/layout';
-import styles from '../../styles/expense.module.scss';
+import styles from '../../styles/expenses/expense.module.scss';
 import axios from 'axios';
 import Link from 'next/link';
 import { FaAd, FaEdit, FaPlus, FaPlusCircle, FaTrash } from 'react-icons/fa';
@@ -101,7 +101,7 @@ const GetExpenses = () => {
       const response = await axios.get('http://localhost:3000/expenses/get-expenses', {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5NzMxNjgsImV4cCI6MTcyMjA1OTU2OH0.orBYlqBfgxwPknhTOJBP0SVKAlMv5a0W6gG3vj4vb6s"
         }
       });
       setExpenses(response.data);
@@ -118,16 +118,15 @@ const GetExpenses = () => {
     router.push('/expenses/add-expenses')
   }
   const handleEdit = (id: number) => {
-    router.push(`/expenses/edit-expenses?id=${id}`);
-
+    router.push(`/expenes/edit-expenses/id=${id}`);
   };
 
   const handleDelete = async (id: number) => {
     try {
-      // const response = await axios.delete(`http://localhost:3000/expenses/${expenses.id}`, {
+      const response = await axios.delete(`http://localhost:3000/expenses/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5NzMxNjgsImV4cCI6MTcyMjA1OTU2OH0.orBYlqBfgxwPknhTOJBP0SVKAlMv5a0W6gG3vj4vb6s"
         }
       });
       setExpenses(response.data);
@@ -146,7 +145,7 @@ const GetExpenses = () => {
       </div>
         <div className={styles.expenseList}>
           {expenses.map((expense) => (
-            <div key={expense.id} className={styles.card}>
+            <div className={styles.card}>
               <div className={styles.cardContent}>
                 <h3>{expense.notes}</h3>
                 <p>{expense.payer}</p>

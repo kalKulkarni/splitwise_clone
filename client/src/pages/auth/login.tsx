@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from '../../styles/login.module.scss'
+import { LayoutRouter } from 'next/dist/server/app-render/entry-base';
+import Layout from '@/components/layout';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +17,7 @@ const Login = () => {
         
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5NzMxNjgsImV4cCI6MTcyMjA1OTU2OH0.orBYlqBfgxwPknhTOJBP0SVKAlMv5a0W6gG3vj4vb6s"
         },
       });
               router.push('/dashboard')
@@ -28,6 +30,8 @@ const Login = () => {
   };
 
   return (
+    <Layout>
+
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <h1 className={styles.title}>Welcome Back</h1>
@@ -62,6 +66,7 @@ const Login = () => {
         </p>
       </div>
     </div>
+              </Layout>
   );
 };
 
