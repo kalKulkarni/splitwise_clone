@@ -92,7 +92,7 @@
 
 import { useState } from 'react';
 import Layout from '../../components/layout';
-import styles from '../../styles/expense.module.scss';
+import styles from '../../styles/expenses/add-expenses.module.scss';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
@@ -119,10 +119,10 @@ const AddExpense = () => {
       await axios.post('http://localhost:3000/expenses/submit-expenses', expenseData, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5MDQ4NTcsImV4cCI6MTcyMTk5MTI1N30.DO65O8qIGblRgsKLGX_aj51VFNkLHDPl6Rp4Wh5-4xY"
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5NzMxNjgsImV4cCI6MTcyMjA1OTU2OH0.orBYlqBfgxwPknhTOJBP0SVKAlMv5a0W6gG3vj4vb6s"
         }
       });
-      router.push('/expenses/get-expenses'); // redirect to expenses page after successful submission
+      router.push('/expenses/get-expenses');
     } catch (error) {
       console.error('Error submitting expense:', error);
     }
@@ -131,50 +131,62 @@ const AddExpense = () => {
   return (
     <Layout>
       <div className={styles.container}>
-        <h1>Add Expense</h1>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <label>
-            Amount:
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </label>
-          <label>
-            Payer:
-            <input
-              type="text"
-              value={payer}
-              onChange={(e) => setPayer(e.target.value)}
-            />
-          </label>
-          <label>
-            Participants:
-            <input
-              type="text"
-              value={participants}
-              onChange={(e) => setParticipants(e.target.value)}
-            />
-          </label>
-          <label>
-            Date:
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </label>
-          <label>
-            Notes:
-            <input
-              type="text"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </label>
-          <button type="submit">Submit Expense</button>
-        </form>
+        <div className={styles.formContainer}>
+          <h1 className={styles.title}>Add Expense</h1>       
+           <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formControl}>
+            <label className={styles.label}>Amount</label>
+            <input 
+              type="amount" 
+              value={amount} 
+              onChange={(e) => setAmount(e.target.value)} 
+              className={styles.input} 
+              required 
+              />
+            </div>
+            <div className={styles.formControl}>
+            <label className={styles.label}>Notes</label>
+            <input 
+              type="notes" 
+              value={notes} 
+              onChange={(e) => setNotes(e.target.value)} 
+              className={styles.input} 
+              required 
+              />
+            </div>
+            <div className={styles.formControl}>
+            <label className={styles.label}>Payer</label>
+            <input 
+              type="payer" 
+              value={payer} 
+              onChange={(e) => setPayer(e.target.value)} 
+              className={styles.input} 
+              required 
+              />
+            </div>
+            <div className={styles.formControl}>
+            <label className={styles.label}>Participants</label>
+            <input 
+              type="participants" 
+              value={participants} 
+              onChange={(e) => setParticipants(e.target.value)} 
+              className={styles.input} 
+              required 
+              />
+            </div>
+            <div className={styles.formControl}>
+            <label className={styles.label}>Date</label>
+            <input 
+              type="date" 
+              value={date} 
+              onChange={(e) => setDate(e.target.value)} 
+              className={styles.input} 
+              required 
+              />
+            </div>
+          </form>
+            <button type="submit" className={styles.submitButton}>Add Expenses </button>
+        </div>
       </div>
     </Layout>
   );
