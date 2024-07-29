@@ -20,7 +20,7 @@ const CreateGroup = () => {
         await axios.post('http://localhost:3000/groups/submit-group', group, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjE5NzMxNjgsImV4cCI6MTcyMjA1OTU2OH0.orBYlqBfgxwPknhTOJBP0SVKAlMv5a0W6gG3vj4vb6s"
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYwLCJpYXQiOjE3MjIyNDQxNTYsImV4cCI6MTcyMjMzMDU1Nn0._UVyAwmDvSSF-QeRGGiZ_IbS1V7kq9Y_vbxdRK8ifiM"
           }
         });
         router.push('/groups/get-groups'); // redirect to expenses page after successful submission

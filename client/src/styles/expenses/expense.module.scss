@@ -281,3 +281,59 @@
   border-radius: 50%; 
   cursor: pointer;
 }
+// Modal overlay styles
+.overlay {
+  background-color: rgba(0, 0, 0, 0.5); // Semi-transparent black
+}
+
+// Modal container styles
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+// Modal title styles
+.modalTitle {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+// Modal message styles
+.modalMessage {
+  font-size: 1rem;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+// Modal actions container styles
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.modelpara{
+  margin-bottom: 5rem;
+}
+// Modal button styles
+.modalButton {
+  background: #000000; // Primary color
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+
+  &:hover {
+    background: #005bb5; // Darker shade on hover
+  }
+}
